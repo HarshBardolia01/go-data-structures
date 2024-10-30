@@ -83,10 +83,10 @@ func (tree *Tree[K, V]) RotateLeft(node *Node[K, V]) *Node[K, V] {
 
 func (tree *Tree[K, V]) Insert(key K, value V) {
 	nodeToInsert := NewNode(key, value, Red)
+	tree.Size += 1
 
 	if tree.Root.IsNil() {
 		tree.Root = nodeToInsert
-		tree.Size += 1
 		tree.FixInsert(nodeToInsert)
 		return
 	}
@@ -158,4 +158,141 @@ func (tree *Tree[K, V]) FixInsert(node *Node[K, V]) {
 	} else if parent == grandPar.Right && node == parent.Right {
 		tree.RotateLeft(grandPar)
 	}
+}
+
+func (tree *Tree[K, V]) ReplaceNodeKV(node1, node2 *Node[K, V]) {
+	node1.Key = node2.Key
+	node1.Value = node2.Value
+}
+
+func (tree *Tree[K, V]) FixDoubleBlack(node *Node[K, V]) {
+	if node.Parent.IsNil() {
+		return
+	}
+
+	sibling := node.GetSibling()
+
+	if sibling.GetColor() == Black && sibling.AreChildrenBlack() {
+		sibling.Color = Red
+
+		if node.Parent.GetColor() == Black {
+			tree.FixDoubleBlack(node.Parent)
+		}
+
+		node.Parent.Color = Black
+		return
+	}
+
+	if sibling.GetColor() == Red {
+		col := node.Parent.GetColor()
+		node.Parent.Color = sibling.GetColor()
+		sibling.Color = col
+
+		if node == node.Parent.Left {
+			tree.RotateLeft(node.Parent)
+		} else if node == node.Parent.Right {
+			tree.RotateRight(node.Parent)
+		}
+
+		tree.FixDoubleBlack(node)
+		return
+	}
+
+	siblingLeftChild := sibling.Left
+
+	if siblingLeftChild.GetColor() == Red {
+		col := sibling.GetColor()
+		sibling.Color = siblingLeftChild.GetColor()
+		siblingLeftChild.Color = col
+
+		if node == node.Parent.Left {
+			tree.RotateRight(sibling)
+		} else if node == node.Parent.Right {
+			tree.RotateLeft(sibling)
+		}
+	}
+
+	sibling = node.GetSibling()
+	siblingRightChild := sibling.Right
+
+	if siblingRightChild.GetColor() == Red {
+		col := sibling.GetColor()
+		sibling.Color = node.Parent.GetColor()
+		node.Parent.Color = col
+		siblingRightChild.Color = Black
+
+		if node == node.Parent.Left {
+			tree.RotateLeft(node.Parent)
+		} else if node == node.Parent.Right {
+			tree.RotateRight(node.Parent)
+		}
+	}
+
+	node.Color = Black
+}
+
+func (tree *Tree[K, V]) DeleteNode(node *Node[K, V]) {
+	if node == node.Parent.Left {
+		node.Parent.Left = nil
+	} else if node == node.Parent.Right {
+		node.Parent.Right = nil
+	}
+
+	node = nil
+}
+
+func (tree *Tree[K, V]) Delete(node *Node[K, V]) {
+	if node.GetColor() == Black {
+		tree.FixDoubleBlack(node)
+	}
+
+	tree.Size -= 1
+	tree.DeleteNode(node)
+}
+
+func (tree *Tree[K, V]) Find(key K) (*Node[K, V], bool) {
+	curNode := tree.Root
+
+	for !curNode.IsNil() {
+		compVal := tree.Compare(key, curNode.Key)
+
+		switch {
+		case compVal == 0:
+			return curNode, true
+		case compVal < 0:
+			curNode = curNode.Left
+		case compVal > 0:
+			curNode = curNode.Right
+		}
+	}
+
+	tree.Delete(curNode)
+	return nil, false
+}
+
+func (tree *Tree[K, V]) Erase(key K) bool {
+	node, found := tree.Find(key)
+
+	if !found {
+		return false
+	}
+
+	for !node.IsLeaf() {
+		pre := node.GetPredeccessor()
+		suc := node.GetSuccessor()
+
+		preVal := pre.SubTreeSize()
+		sucVal := suc.SubTreeSize()
+
+		if preVal < sucVal {
+			tree.ReplaceNodeKV(node, suc)
+			node = suc
+		} else {
+			tree.ReplaceNodeKV(node, pre)
+			node = pre
+		}
+	}
+
+	tree.Delete(node)
+	return true
 }

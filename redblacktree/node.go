@@ -138,3 +138,11 @@ func (node *Node[K, V]) GetColor() Color {
 
 	return node.Color
 }
+
+func (node *Node[K, V]) AreChildrenBlack() bool {
+	if node.IsNil() {
+		return false
+	}
+
+	return node.Left.GetColor() == Black && node.Right.GetColor() == Black
+}
