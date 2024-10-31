@@ -1,2 +1,3 @@
-# Red Black Tree
-Implementing Red Black Tree from scratch in Golang.
+# Go - Data Structures
+
+Implementing the following Data Structures from scratch in Golang.
