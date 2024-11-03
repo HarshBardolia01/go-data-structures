@@ -3,16 +3,18 @@ package redblacktree
 type CompType[K comparable] func(x, y K) int
 
 type Tree[K comparable, V any] struct {
-	Root    *Node[K, V]
-	Size    int
-	Compare CompType[K]
+	Root            *Node[K, V]
+	Size            int
+	Compare         CompType[K]
+	AllowDuplicates bool
 }
 
-func NewTree[K comparable, V any](comparator CompType[K]) *Tree[K, V] {
+func NewTree[K comparable, V any](comparator CompType[K], allowDuplicates bool) *Tree[K, V] {
 	return &Tree[K, V]{
-		Root:    nil,
-		Size:    0,
-		Compare: comparator,
+		Root:            nil,
+		Size:            0,
+		Compare:         comparator,
+		AllowDuplicates: allowDuplicates,
 	}
 }
 

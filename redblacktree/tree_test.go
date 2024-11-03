@@ -23,7 +23,7 @@ func TestTreeDelete(t *testing.T) {
 	t.Run("tc1", func(t *testing.T) {
 		tree := NewTree[int, int](func(x, y int) int {
 			return x - y
-		})
+		}, true)
 
 		tree.Insert(10, 0)
 
@@ -57,7 +57,7 @@ func TestTreeDelete(t *testing.T) {
 	t.Run("tc2", func(t *testing.T) {
 		tree := NewTree[int, int](func(x, y int) int {
 			return x - y
-		})
+		}, true)
 
 		tree.Insert(10, 0)
 
@@ -82,7 +82,7 @@ func TestTreeDelete(t *testing.T) {
 	t.Run("tc3", func(t *testing.T) {
 		tree := NewTree[int, int](func(x, y int) int {
 			return x - y
-		})
+		}, true)
 
 		tree.Insert(10, 0)
 
@@ -113,7 +113,7 @@ func TestTreeDelete(t *testing.T) {
 	t.Run("tc4", func(t *testing.T) {
 		tree := NewTree[int, int](func(x, y int) int {
 			return x - y
-		})
+		}, true)
 
 		tree.Insert(10, 0)
 
@@ -150,7 +150,7 @@ func TestTreeDelete(t *testing.T) {
 	t.Run("tc5", func(t *testing.T) {
 		tree := NewTree[int, int](func(x, y int) int {
 			return x - y
-		})
+		}, true)
 
 		tree.Insert(10, 0)
 
