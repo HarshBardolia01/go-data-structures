@@ -98,6 +98,14 @@ func (tree *Tree[K, V]) Insert(key K, value V) {
 	for !curNode.IsNil() {
 		compVal := tree.Compare(key, curNode.Key)
 
+		if compVal == 0 {
+			if !tree.AllowDuplicates {
+				curNode.Key = key
+				curNode.Value = value
+				return
+			}
+		}
+
 		if compVal < 0 {
 			if curNode.Left.IsNil() {
 				nodeToInsert.Parent = curNode
