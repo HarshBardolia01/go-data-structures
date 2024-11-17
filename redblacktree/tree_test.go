@@ -183,4 +183,54 @@ func TestTreeDelete(t *testing.T) {
 		fmt.Println("---------------------")
 		DFS(tree.Root, "0")
 	})
+
+	t.Run("tc6", func(t *testing.T) {
+		tree := NewTree[int, int](func(x, y int) int {
+			return x - y
+		}, true)
+
+		tree.Insert(1, 0)
+		tree.Insert(2, 1)
+		tree.Insert(4, 2)
+		tree.Insert(4, 3)
+
+		DFS(tree.Root, "0")
+		fmt.Println("---------------------")
+
+		tree.Erase(1)
+		DFS(tree.Root, "0")
+		fmt.Println("---------------------")
+
+		tree.Erase(2)
+		DFS(tree.Root, "0")
+		fmt.Println("---------------------")
+
+		tree.Insert(3, 4)
+		DFS(tree.Root, "0")
+		fmt.Println("---------------------")
+
+		tree.Erase(3)
+		DFS(tree.Root, "0")
+		fmt.Println("---------------------")
+
+		tree.Erase(4)
+		DFS(tree.Root, "0")
+		fmt.Println("---------------------")
+
+		tree.Insert(7, 5)
+		DFS(tree.Root, "0")
+		fmt.Println("---------------------")
+
+		tree.Erase(4)
+		DFS(tree.Root, "0")
+		fmt.Println("---------------------")
+
+		tree.Erase(7)
+		DFS(tree.Root, "0")
+		fmt.Println("---------------------")
+
+		tree.Insert(11, 6)
+		DFS(tree.Root, "0")
+		fmt.Println("---------------------")
+	})
 }

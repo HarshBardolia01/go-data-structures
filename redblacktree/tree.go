@@ -242,6 +242,12 @@ func (tree *Tree[K, V]) FixDoubleBlack(node *Node[K, V]) {
 }
 
 func (tree *Tree[K, V]) DeleteNode(node *Node[K, V]) {
+	if node.Parent.IsNil() {
+		tree.Root = nil
+		node = nil
+		return
+	}
+
 	if node == node.Parent.Left {
 		node.Parent.Left = nil
 	} else if node == node.Parent.Right {
