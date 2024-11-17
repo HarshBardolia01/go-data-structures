@@ -1,3 +1,3 @@
-module github.com/HarshBardolia01/redblacktree
+module github.com/HarshBardolia01/go-data-structures
 
-go 1.21.13
+go 1.22.9
