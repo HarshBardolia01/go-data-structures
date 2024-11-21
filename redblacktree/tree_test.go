@@ -13,6 +13,12 @@ func DFS(node *Node[int, int], path string) {
 	DFS(node.Left, path+"L")
 
 	fmt.Printf("Key: %d\n", node.Key)
+	fmt.Printf("Val: %d\n", node.Value)
+	if !node.Parent.IsNil() {
+		fmt.Printf("par: %d\n", node.Parent.Value)
+	} else {
+		fmt.Printf("no parent\n")
+	}
 	fmt.Printf("Color: %s\n", node.Color)
 	fmt.Printf("Path: %s\n\n", path)
 
@@ -230,6 +236,48 @@ func TestTreeDelete(t *testing.T) {
 		fmt.Println("---------------------")
 
 		tree.Insert(11, 6)
+		DFS(tree.Root, "0")
+		fmt.Println("---------------------")
+	})
+
+	t.Run("tc0", func(t *testing.T) {
+		tree := NewTree[int, int](func(x, y int) int {
+			return x - y
+		}, true)
+
+		tree.Insert(1, 1)
+		DFS(tree.Root, "0")
+		fmt.Println("---------------------")
+
+		tree.Insert(1, 2)
+		DFS(tree.Root, "0")
+		fmt.Println("---------------------")
+
+		tree.Insert(1, 3)
+		DFS(tree.Root, "0")
+		fmt.Println("---------------------")
+
+		tree.Insert(1, 4)
+		DFS(tree.Root, "0")
+		fmt.Println("---------------------")
+
+		tree.Insert(1, 5)
+		DFS(tree.Root, "0")
+		fmt.Println("---------------------")
+
+		tree.Insert(2, 6)
+		DFS(tree.Root, "0")
+		fmt.Println("---------------------")
+
+		tree.Insert(3, 7)
+		DFS(tree.Root, "0")
+		fmt.Println("---------------------")
+
+		tree.Insert(4, 8)
+		DFS(tree.Root, "0")
+		fmt.Println("---------------------")
+
+		tree.Erase(1)
 		DFS(tree.Root, "0")
 		fmt.Println("---------------------")
 	})

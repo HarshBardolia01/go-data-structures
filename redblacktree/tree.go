@@ -1,5 +1,7 @@
 package redblacktree
 
+import "fmt"
+
 type CompType[K comparable] func(x, y K) int
 
 type Tree[K comparable, V any] struct {
@@ -41,6 +43,9 @@ func (tree *Tree[K, V]) RotateRight(node *Node[K, V]) *Node[K, V] {
 
 	node.Parent = leftChild
 	node.Left = leftRightChild
+	if !leftRightChild.IsNil() {
+		leftRightChild.Parent = node
+	}
 
 	if parent.IsNil() {
 		tree.Root = leftChild
@@ -66,6 +71,9 @@ func (tree *Tree[K, V]) RotateLeft(node *Node[K, V]) *Node[K, V] {
 
 	node.Parent = rightChild
 	node.Right = rightLeftChild
+	if !rightLeftChild.IsNil() {
+		rightLeftChild.Parent = node
+	}
 
 	if parent.IsNil() {
 		tree.Root = rightChild
@@ -129,6 +137,11 @@ func (tree *Tree[K, V]) Insert(key K, value V) {
 }
 
 func (tree *Tree[K, V]) FixInsert(node *Node[K, V]) {
+	// fmt.Println(node.Value)
+	// if !node.Parent.IsNil() {
+	// 	fmt.Println(node.Parent)
+	// }
+
 	if node.Parent.IsNil() {
 		node.Color = Black
 		return
@@ -181,6 +194,10 @@ func (tree *Tree[K, V]) FixDoubleBlack(node *Node[K, V]) {
 	}
 
 	sibling := node.GetSibling()
+
+	// fmt.Println("fix")
+	// fmt.Println(node.Value)
+	// fmt.Println(sibling.Value)
 
 	if sibling.GetColor() == Black && sibling.AreChildrenBlack() {
 		sibling.Color = Red
@@ -248,6 +265,10 @@ func (tree *Tree[K, V]) DeleteNode(node *Node[K, V]) {
 		return
 	}
 
+	// fmt.Println("HERE")
+	// fmt.Println(node.Value)
+	// fmt.Println(node.Parent.Value)
+
 	if node == node.Parent.Left {
 		node.Parent.Left = nil
 	} else if node == node.Parent.Right {
@@ -259,6 +280,7 @@ func (tree *Tree[K, V]) DeleteNode(node *Node[K, V]) {
 
 func (tree *Tree[K, V]) Delete(node *Node[K, V]) {
 	if node.GetColor() == Black {
+		// DFS2(tree.Root, "0")
 		tree.FixDoubleBlack(node)
 	}
 
@@ -311,4 +333,29 @@ func (tree *Tree[K, V]) Erase(key K) bool {
 
 	tree.Delete(node)
 	return true
+}
+
+func dfs2[K comparable, V any](node *Node[K, V]) {
+	if node.IsNil() {
+		return
+	}
+
+	dfs2(node.Left)
+	fmt.Printf(" %d ", node.Key)
+	dfs2(node.Right)
+}
+
+func DFS2[K comparable, V any](node *Node[K, V], path string) {
+	if node.IsNil() {
+		return
+	}
+
+	DFS2(node.Left, path+"L")
+
+	fmt.Printf("Key: %d\n", node.Key)
+	fmt.Printf("Val: %d\n", node.Value)
+	fmt.Printf("Color: %s\n", node.Color)
+	fmt.Printf("Path: %s\n\n", path)
+
+	DFS2(node.Right, path+"R")
 }
